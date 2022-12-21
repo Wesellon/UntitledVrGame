@@ -153,7 +153,6 @@ func _on_openxr_session_begun():
 		vp.keep_3d_linear = $Configuration.keep_3d_linear()
 
 	emit_signal("session_begun")
-
 func _on_openxr_session_ending():
 	# This is called on session stopping
 
@@ -207,3 +206,6 @@ func _get_configuration_warning():
 		return "You must call initialise() manually for VR to start"
 
 	return ""
+
+
+	
