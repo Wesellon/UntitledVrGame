@@ -24,6 +24,9 @@ export var far_z = 1000.0
 var interface : ARVRInterface
 var enabled_extensions : Array
 
+export var MOVEMENT_SPEED = 5
+
+
 func set_auto_initialise(p_new_value):
 	auto_initialise = p_new_value
 	update_configuration_warning()
@@ -207,5 +210,15 @@ func _get_configuration_warning():
 
 	return ""
 
+var customDelta
 
-	
+func _process(delta):
+	customDelta=delta
+
+func _unhandled_input(event):
+	if event is InputEventKey:
+		if event.pressed and event.scancode == KEY_W:
+			self.translate(Vector3(0,0,-MOVEMENT_SPEED*customDelta))
+				
+		if event.pressed and event.scancode == KEY_S:
+			self.translate(Vector3(0,0,MOVEMENT_SPEED*customDelta))

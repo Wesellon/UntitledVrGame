@@ -4,7 +4,7 @@ signal activated
 signal deactivated
 
 export var hide_for_no_tracking_confidence = false
-export var MOVEMENT_SPEED = 5
+
 
 var A_button_down
 const CONTROLLER_MOVEMENT_DEADZONE = 0.2
@@ -13,6 +13,8 @@ var directional_movement = false
 
 onready var _controller = get_parent()
 var customDelta
+
+export var MOVEMENT_SPEED = 5
 
 const ControllerIDs = {
 		# Controller
@@ -39,8 +41,9 @@ const ControllerIDs = {
 func _ready():
 	connect("button_pressed", self, "button_pressed")
 	#connect("button_release", self, "button_released")
-	
+
 	print("READY")
+
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -65,22 +68,20 @@ func _process(delta):
 		else:
 			print("Deactivated " + name)
 			emit_signal("deactivated")
-	
-	handle_joyStickInput()
-	customDelta=delta
 
 	
-
+func _physics_process(delta):
+	handle_joyStickInput(delta)
 
 	
-func handle_joyStickInput():
+func handle_joyStickInput(delta):
 	var joystick_vector = Vector2(-get_joystick_axis(0), get_joystick_axis(1))
 	if (abs(joystick_vector.x)>CONTROLLER_MOVEMENT_DEADZONE || abs(joystick_vector.y)>CONTROLLER_MOVEMENT_DEADZONE) && controller_id==ControllerIDs.left_Hand:
-		print(str(controller_id,joystick_vector))
-		_controller.translate(Vector3(-joystick_vector.x*MOVEMENT_SPEED*customDelta,0,-joystick_vector.y*MOVEMENT_SPEED*customDelta))
+		#print(str(controller_id,joystick_vector))
+		_controller.translate(Vector3(-joystick_vector.x*MOVEMENT_SPEED*delta,0,-joystick_vector.y*MOVEMENT_SPEED*delta))
 	
 	if(abs(joystick_vector.x)>CONTROLLER_TURNING_DEADZONE || abs(joystick_vector.y)>CONTROLLER_TURNING_DEADZONE) && controller_id==ControllerIDs.right_Hand:
-		print(str(controller_id,joystick_vector))
+		#print(str(controller_id,joystick_vector))
 		_controller.rotate_y(joystick_vector.x/10)
 		
 
@@ -94,12 +95,3 @@ func button_pressed(button_index):
 		# RIGHT HAND
 		print(str("RIGHT HAND: ",button_index))
 
-
-func _unhandled_input(event):
-	if event is InputEventKey:
-		if event.pressed and event.scancode == KEY_W:
-			_controller.translate(Vector3(0,0,-MOVEMENT_SPEED*customDelta))
-		if event.pressed and event.scancode == KEY_S:
-			_controller.translate(Vector3(0,0,MOVEMENT_SPEED*customDelta))
-			
-			
