@@ -4,7 +4,7 @@
 [ext_resource path="res://checker-map_tho_blog.png" type="Texture" id=2]
 [ext_resource path="res://addons/godot-openxr/scenes/controller.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/GroundCastScript.gd" type="Script" id=4]
-[ext_resource path="res://Scripts/tewatawetr.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/CharacterControllerMasterScript.gd" type="Script" id=5]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -48,6 +48,7 @@ shape = SubResource( 9 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0 )
+disabled = true
 script = ExtResource( 5 )
 
 [node name="CharacterController" parent="CollisionShape" instance=ExtResource( 1 )]
@@ -57,7 +58,6 @@ script = ExtResource( 5 )
 [node name="LeftHandController" parent="CollisionShape/CharacterController" index="2"]
 visible = true
 script = ExtResource( 3 )
-MOVEMENT_SPEED = 5
 
 [node name="HandLeft" type="MeshInstance" parent="CollisionShape/CharacterController/LeftHandController" index="0"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -2.5, 3, 0.5 )
@@ -67,7 +67,6 @@ skeleton = NodePath("../../../..")
 [node name="RightHandController" parent="CollisionShape/CharacterController" index="3"]
 visible = true
 script = ExtResource( 3 )
-MOVEMENT_SPEED = 5
 
 [node name="HandRight" type="MeshInstance" parent="CollisionShape/CharacterController/RightHandController" index="0"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 2.5, 3, 0.5 )

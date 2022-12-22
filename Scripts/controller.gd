@@ -49,7 +49,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print("CONTROSDNOFINSODNF")
 	var should_be_visible = true
 	if get_is_active():
 		if hide_for_no_tracking_confidence:
