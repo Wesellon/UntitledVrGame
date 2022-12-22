@@ -24,6 +24,14 @@ export var far_z = 1000.0
 var interface : ARVRInterface
 var enabled_extensions : Array
 
+export var MAX_FALLING_VELOCITY = 20
+export var CONTROLLER_HEIGHT = 2
+export var GROUNDCAST_LEVEL_HEIGHT = 2.1
+export var FALLING_ACCELERATION = 1.1
+export var MOVEMENT_SPEED = 5
+onready var _groundCast=get_node("GroundCast")
+onready var falling_velocity
+
 func set_auto_initialise(p_new_value):
 	auto_initialise = p_new_value
 	update_configuration_warning()
@@ -51,6 +59,8 @@ func get_interface() -> ARVRInterface:
 func _ready():
 	$ARVRCamera.near = near_z
 	$ARVRCamera.far = far_z
+	print("AWD")
+	falling_velocity=1
 
 	if auto_initialise && !Engine.editor_hint:
 		initialise()
@@ -206,3 +216,35 @@ func _get_configuration_warning():
 		return "You must call initialise() manually for VR to start"
 
 	return ""
+
+var customDelta
+
+func _process(delta):
+	customDelta=delta
+	print("YO")
+	if(self.get_transform().origin.y<-20):
+		self.translate(Vector3(self.get_transform().origin.x,self.get_transform().origin.y+50,self.get_transform().origin.z))
+		print("LOW HEIGHT")
+#func _physics_process(delta):
+	#handle_falling_physics(delta)
+
+
+
+func handle_falling_physics(delta):
+	if self.get_transform().origin.y-_groundCast.get_collision_point().y>GROUNDCAST_LEVEL_HEIGHT||_groundCast.get_collider()==null:
+		self.translate(Vector3(0,-falling_velocity*delta,0))
+		if falling_velocity<MAX_FALLING_VELOCITY:
+			falling_velocity*=FALLING_ACCELERATION
+	else:
+		self.global_transform.origin=Vector3(self.get_global_transform().origin.x,_groundCast.get_collision_point().y+CONTROLLER_HEIGHT,self.get_global_transform().origin.z)
+		falling_velocity=1
+	print(str("Collision=",self.get_transform().origin.y-_groundCast.get_collision_point().y," Falling Velocity: ",falling_velocity))
+
+
+func _unhandled_input(event):
+	if event is InputEventKey:
+		if event.pressed and event.scancode == KEY_W:
+			self.translate(Vector3(0,0,-MOVEMENT_SPEED*customDelta))
+				
+		if event.pressed and event.scancode == KEY_S:
+			self.translate(Vector3(0,0,MOVEMENT_SPEED*customDelta))
