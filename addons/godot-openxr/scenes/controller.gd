@@ -6,7 +6,7 @@ signal deactivated
 export var hide_for_no_tracking_confidence = false
 
 var directional_movement = false
-	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var should_be_visible = true
@@ -29,3 +29,4 @@ func _process(delta):
 		else:
 			print("Deactivated " + name)
 			emit_signal("deactivated")
+
