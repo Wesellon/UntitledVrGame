@@ -16,6 +16,9 @@ onready var _controller_RIGHT= get_node("CharacterController/RightHandController
 onready var _camera= get_node("CharacterController/ARVRCamera")
 var customDelta=1
 
+var mouse_sens = 0.3
+var camera_anglev=0
+
 const ControllerIDs = {
 		# Controller
 		left_Hand=1,
@@ -45,7 +48,7 @@ func _ready():
 func _process(delta):
 	customDelta=delta
 	if(self.get_transform().origin.y<-20):
-		self.translate(Vector3(self.get_transform().origin.x,self.get_transform().origin.y+50,self.get_transform().origin.z))
+		self.transform.origin=Vector3(0,7,0)
 		print("LOW HEIGHT")
 
 
@@ -59,21 +62,30 @@ func handle_falling_physics(delta):
 		self.translate(Vector3(0,-falling_velocity*delta,0))
 		if falling_velocity<MAX_FALLING_VELOCITY:
 			falling_velocity*=FALLING_ACCELERATION
+		else:
+			falling_velocity=MAX_FALLING_VELOCITY
 	else:
 		self.global_transform.origin=Vector3(self.get_global_transform().origin.x,_groundCast.get_collision_point().y+CONTROLLER_HEIGHT,self.get_global_transform().origin.z)
 		falling_velocity=1
-	#print(str("Collision=",self.get_transform().origin.y-_groundCast.get_collision_point().y," Falling Velocity: ",falling_velocity))
-
 
 func _unhandled_input(event):
 	if event is InputEventKey:
 		if event.pressed and event.scancode == KEY_W:
-			self.translate(Vector3(0,0,-MOVEMENT_SPEED*2*customDelta))
+			self.translate(Vector3(0,0,-MOVEMENT_SPEED*2*customDelta).rotated(Vector3.UP,_camera.get_rotation().y))
 				
 		if event.pressed and event.scancode == KEY_S:
-			self.translate(Vector3(0,0,MOVEMENT_SPEED*2*customDelta))
+			self.translate(Vector3(0,0,MOVEMENT_SPEED*2*customDelta).rotated(Vector3.UP,_camera.get_rotation().y))
 
-	
+		if event.pressed and event.scancode == KEY_A:
+			self.translate(Vector3(-MOVEMENT_SPEED*2*customDelta,0,0).rotated(Vector3.UP,_camera.get_rotation().y))
+				
+		if event.pressed and event.scancode == KEY_D:
+			self.translate(Vector3(MOVEMENT_SPEED*2*customDelta,0,0).rotated(Vector3.UP,_camera.get_rotation().y))
+
+func _input(event):         
+	if event is InputEventMouseMotion:
+		_camera.rotate_y(deg2rad(-event.relative.x*mouse_sens))
+
 func handle_joyStickInput(delta):
 	var joystick_LEFT = Vector2(-_controller_LEFT.get_joystick_axis(0), _controller_LEFT.get_joystick_axis(1))
 	var joystick_RIGHT = Vector2(-_controller_RIGHT.get_joystick_axis(0), _controller_RIGHT.get_joystick_axis(1))

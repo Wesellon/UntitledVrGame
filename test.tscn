@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/godot-openxr/scenes/first_person_controller_vr.tscn" type="PackedScene" id=1]
 [ext_resource path="res://checker-map_tho_blog.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/controller.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/GroundCastScript.gd" type="Script" id=4]
 [ext_resource path="res://Scripts/CharacterControllerMasterScript.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/controller.gd" type="Script" id=6]
@@ -67,7 +66,7 @@ skeleton = NodePath("../../../..")
 
 [node name="RightHandController" parent="CollisionShape/CharacterController" index="3"]
 visible = true
-script = ExtResource( 3 )
+script = ExtResource( 6 )
 
 [node name="HandRight" type="MeshInstance" parent="CollisionShape/CharacterController/RightHandController" index="0"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
